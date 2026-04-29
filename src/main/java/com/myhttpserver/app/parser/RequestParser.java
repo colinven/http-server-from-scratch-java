@@ -1,6 +1,7 @@
 package com.myhttpserver.app.parser;
 
 import com.myhttpserver.app.exception.HttpParseException;
+import com.myhttpserver.app.request.HttpMethod;
 import com.myhttpserver.app.request.HttpRequest;
 import com.myhttpserver.app.request.RequestLine;
 
@@ -98,6 +99,12 @@ public class RequestParser {
         if (!version.equals("HTTP/1.1")) {
             throw new HttpParseException(505, version + " Not Supported");
         }
-        return new RequestLine(method, target, version);
+        HttpMethod httpMethod;
+        try {
+            httpMethod = HttpMethod.valueOf(method.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new HttpParseException(400, "Invalid HTTP method: " + method);
+        }
+        return new RequestLine(httpMethod, target, version);
     }
 }

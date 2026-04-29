@@ -1,7 +1,7 @@
 package com.myhttpserver.app.request;
 
 public record RequestLine(
-        String method,
+        HttpMethod method,
         String target,
         String version
 ) { }
