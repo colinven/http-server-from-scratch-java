@@ -2,6 +2,7 @@ package com.myhttpserver.app.parser;
 
 import com.myhttpserver.app.dto.HttpRequest;
 import com.myhttpserver.app.dto.RequestLine;
+import com.myhttpserver.app.exception.MalformedRequestException;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -24,16 +25,21 @@ public class RequestParser {
 
         int prev = -1;
         int curr;
+        String errorMsg = null;
 
         while ((curr = in.read()) != -1) {
+            boolean isCRLF = prev == '\r' && curr == '\n';
+            boolean isBareLF = curr == '\n';
+
             switch (state) {
                 case REQUEST_LINE -> {
-                    if (prev == '\r' && curr == '\n') { // CRLF -> signifies end of request line, move to headers
+                    if (isCRLF) { // CRLF -> signifies end of request line, move to headers
                         requestLine = parseRequestLine(buffer.toString());
                         buffer.setLength(0);
                         state = ParserState.HEADER_NAME;
-                    } else if (curr == '\n') { // bare '\n' without '\r' -> reject (malformed)
+                    } else if (isBareLF) { // bare '\n' without '\r' -> reject (malformed)
                         state = ParserState.ERROR;
+                        errorMsg = "Malformed request line";
                     } else if (curr != '\r') { // iterate through bytes until CRLF
                         buffer.append((char) curr);
                     }
@@ -43,25 +49,33 @@ public class RequestParser {
                         currHeaderName = buffer.toString().trim().toLowerCase();
                         buffer.setLength(0);
                         state = ParserState.HEADER_VALUE;
-                    } else if (prev == '\r' && curr == '\n') {
+                    } else if (isCRLF) {
                         if (buffer.isEmpty()) {
                             state = ParserState.BODY;
                         } else {
-                            state = ParserState.ERROR; // malformed
+                            state = ParserState.ERROR;
+                            errorMsg = "Malformed request header name";
                         }
                     } else if (curr != '\r') {
                         buffer.append((char) curr);
                     }
                 }
                 case HEADER_VALUE -> {
-                    if (prev == '\r' && curr == '\n') {
+                    if (isCRLF) {
                         headers.computeIfAbsent(currHeaderName, k -> new ArrayList<>())
                                 .add(buffer.toString().trim());
                         buffer.setLength(0);
                         state = ParserState.HEADER_NAME;
+                    } else if (isBareLF) {
+                        state = ParserState.ERROR;
+                        errorMsg = "Malformed request header value";
                     } else if (curr != '\r') {
                         buffer.append((char) curr);
+
                     }
+                }
+                case ERROR -> {
+                    throw new MalformedRequestException(errorMsg);
                 }
             }
             if (state == ParserState.BODY) {
@@ -71,8 +85,7 @@ public class RequestParser {
                 }
                 state = ParserState.COMPLETE;
             }
-            //TODO: Need to handle malformed request errors
-            if (state == ParserState.COMPLETE || state == ParserState.ERROR) break;
+            if (state == ParserState.COMPLETE) break;
             prev = curr;
         }
         return new HttpRequest(requestLine, headers, body.length > 0 ? body : null);
