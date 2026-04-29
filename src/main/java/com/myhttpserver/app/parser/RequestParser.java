@@ -1,8 +1,8 @@
 package com.myhttpserver.app.parser;
 
-import com.myhttpserver.app.dto.HttpRequest;
-import com.myhttpserver.app.dto.RequestLine;
-import com.myhttpserver.app.exception.MalformedRequestException;
+import com.myhttpserver.app.exception.HttpParseException;
+import com.myhttpserver.app.request.HttpRequest;
+import com.myhttpserver.app.request.RequestLine;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class RequestParser {
 
-    public HttpRequest parseRequest(BufferedInputStream in) throws IOException {
+    public HttpRequest parseRequest(BufferedInputStream in) throws IOException, HttpParseException {
 
         ParserState state = ParserState.REQUEST_LINE;
         StringBuilder buffer = new StringBuilder();
@@ -75,7 +75,7 @@ public class RequestParser {
                     }
                 }
                 case ERROR -> {
-                    throw new MalformedRequestException(errorMsg);
+                    throw new HttpParseException(400, errorMsg);
                 }
             }
             if (state == ParserState.BODY) {
@@ -92,9 +92,12 @@ public class RequestParser {
 
     }
 
-    private RequestLine parseRequestLine(String requestLine) {
+    private RequestLine parseRequestLine(String requestLine) throws HttpParseException{
         String[] parts = requestLine.split(" ");
         String method = parts[0], target = parts[1], version = parts[2];
+        if (!version.equals("HTTP/1.1")) {
+            throw new HttpParseException(505, version + " Not Supported");
+        }
         return new RequestLine(method, target, version);
     }
 }
