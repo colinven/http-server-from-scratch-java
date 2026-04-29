@@ -80,6 +80,7 @@ public class RequestParser {
                 }
             }
             if (state == ParserState.BODY) {
+                // if 'content-length' is present, read bytes equal to content-length value
                 if (headers.containsKey("content-length")) {
                     int len = Integer.parseInt(headers.get("content-length").get(0));
                     body = in.readNBytes(len);
@@ -89,6 +90,10 @@ public class RequestParser {
             if (state == ParserState.COMPLETE) break;
             prev = curr;
         }
+        // 'Host' header required. throw if absent
+        if (!headers.containsKey("host")) {
+            throw new HttpParseException(400, "Missing host");
+        }
         return new HttpRequest(requestLine, headers, body.length > 0 ? body : null);
 
     }
@@ -96,9 +101,11 @@ public class RequestParser {
     private RequestLine parseRequestLine(String requestLine) throws HttpParseException{
         String[] parts = requestLine.split(" ");
         String method = parts[0], target = parts[1], version = parts[2];
+        // throw if http version is not 1.1
         if (!version.equals("HTTP/1.1")) {
             throw new HttpParseException(505, version + " Not Supported");
         }
+        // throw if http method is invalid
         HttpMethod httpMethod;
         try {
             httpMethod = HttpMethod.valueOf(method.toUpperCase());
