@@ -1,4 +1,4 @@
-package com.myhttpserver.app.dto;
+package com.myhttpserver.app.request;
 
 import java.util.List;
 import java.util.Map;

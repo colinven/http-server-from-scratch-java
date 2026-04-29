@@ -1,4 +1,4 @@
-package com.myhttpserver.app.dto;
+package com.myhttpserver.app.request;
 
 public enum HttpMethod {
     GET,
