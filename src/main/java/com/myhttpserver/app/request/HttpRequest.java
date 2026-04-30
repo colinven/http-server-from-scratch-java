@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 public record HttpRequest(
-        RequestLine line,
+        RequestLine requestLine,
         Map<String, List<String>> headers,
         byte[] body
 ) { }
