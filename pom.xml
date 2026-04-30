@@ -80,6 +80,14 @@
         <plugin>
           <artifactId>maven-jar-plugin</artifactId>
           <version>3.4.2</version>
+          <configuration>
+            <archive>
+              <manifest>
+                <mainClass>com.myhttpserver.app.App</mainClass>
+              </manifest>
+            </archive>
+            <finalName>http-server</finalName>
+          </configuration>
         </plugin>
         <plugin>
           <artifactId>maven-install-plugin</artifactId>
