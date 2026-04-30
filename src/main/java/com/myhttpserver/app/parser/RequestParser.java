@@ -100,6 +100,9 @@ public class RequestParser {
 
     private RequestLine parseRequestLine(String requestLine) throws HttpParseException{
         String[] parts = requestLine.split(" ");
+        if (parts.length != 3) {
+            throw new HttpParseException(400, "Malformed request line");
+        }
         String method = parts[0], target = parts[1], version = parts[2];
         // throw if http version is not 1.1
         if (!version.equals("HTTP/1.1")) {
