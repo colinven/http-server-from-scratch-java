@@ -1,11 +1,6 @@
 package com.myhttpserver.app.server;
 
-import com.myhttpserver.app.exception.HttpParseException;
 import com.myhttpserver.app.io.ConnectionHandler;
-import com.myhttpserver.app.request.HttpRequest;
-import com.myhttpserver.app.parser.RequestParser;
-import com.myhttpserver.app.response.HttpResponse;
-import com.myhttpserver.app.router.Router;
 
 import java.io.*;
 import java.net.ServerSocket;
