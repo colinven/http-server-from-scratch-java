@@ -13,6 +13,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 public class HttpServer {
@@ -57,7 +58,7 @@ public class HttpServer {
         }
     }
 
-    private void shutdown() throws IOException {
+    public void shutdown() throws IOException {
         running = false;
         if (serverSocket != null && !serverSocket.isClosed()) {
             serverSocket.close();
@@ -82,6 +83,10 @@ public class HttpServer {
                 System.err.println("(http-server): Error shutting down: " + e.getMessage());
             }
         }));
+    }
+
+    public int getActiveThreadCount() {
+        return ((ThreadPoolExecutor) pool).getPoolSize();
     }
 
 }

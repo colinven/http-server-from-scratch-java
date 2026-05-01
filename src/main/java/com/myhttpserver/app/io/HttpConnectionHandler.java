@@ -29,6 +29,8 @@ public class HttpConnectionHandler implements ConnectionHandler {
                 response.write(output);
             } catch (HttpParseException e) {
                 HttpResponse.ofString(e.getStatusCode(), e.getMessage()).write(output);
+            } catch (Exception e) {
+                HttpResponse.internalServerError().write(output);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

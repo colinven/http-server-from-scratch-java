@@ -1,4 +1,6 @@
 package com.myhttpserver.app.router;
 
-public record RouteKey() {
+import com.myhttpserver.app.request.HttpMethod;
+
+public record RouteKey(HttpMethod method, String path) {
 }
