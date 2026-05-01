@@ -56,6 +56,24 @@ public class HttpResponse {
         return new HttpResponse(400, headers, body);
     }
 
+    public static HttpResponse notFound() {
+        String body = "Resource not found";
+        byte[] bodyBytes = body.getBytes(StandardCharsets.UTF_8);
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Content-Type", "text/plain");
+        headers.put("Content-Length", String.valueOf(bodyBytes.length));
+        return new HttpResponse(404, headers, bodyBytes);
+    }
+
+    public static HttpResponse internalServerError() {
+        String body = "Internal Server Error";
+        byte[] bodyBytes = body.getBytes(StandardCharsets.UTF_8);
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Content-Type", "text/plain");
+        headers.put("Content-Length", String.valueOf(bodyBytes.length));
+        return new HttpResponse(500, headers, bodyBytes);
+    }
+
     public static HttpResponse httpVersionNotSupported(String message) {
         byte[] body = message.getBytes(StandardCharsets.UTF_8);
         Map<String, String> headers = new HashMap<>();
