@@ -1,5 +1,7 @@
 package com.myhttpserver.app.server;
 
+import com.myhttpserver.app.config.AppConfig;
+import com.myhttpserver.app.io.ConnectionHandler;
 import com.myhttpserver.app.io.HttpConnectionHandler;
 import com.myhttpserver.app.parser.RequestParser;
 import com.myhttpserver.app.router.Router;
@@ -7,13 +9,11 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
@@ -29,9 +29,9 @@ public class HttpServerIntegrationTest {
     @BeforeEach
     public void setup() throws Exception {
         RequestParser parser = new RequestParser();
-        Router router = new Router();
-        // register routes here
-        var handler = new HttpConnectionHandler(parser, router);
+        Router router = AppConfig.buildRouter();
+
+        ConnectionHandler handler = new HttpConnectionHandler(parser, router);
         server = new HttpServer(handler);
 
         serverThread = new Thread(() -> {
@@ -93,8 +93,8 @@ public class HttpServerIntegrationTest {
         latch.await(5, TimeUnit.SECONDS);
 
         assertThat(error.get()).isNull();
-        assertThat(response1.get()).isEqualTo("Hello World!\n");
-        assertThat(response2.get()).isEqualTo("Hello World!\n");
+        assertThat(response1.get()).isEqualTo("Hello World!");
+        assertThat(response2.get()).isEqualTo("Hello World!");
     }
     @Test
     void slowHandlerDoesNotBlockFastHandlerInConcurrentRequests() throws Exception {
@@ -118,7 +118,7 @@ public class HttpServerIntegrationTest {
             try {
                 Thread.sleep(50);
                 long start = System.currentTimeMillis();
-                get("/fast");
+                get("/hello");
                 fastResponseTime.set(System.currentTimeMillis() - start);
             } catch (Exception e) {}
             finally {
@@ -165,5 +165,15 @@ public class HttpServerIntegrationTest {
         boolean completed = requestDone.await(10, TimeUnit.SECONDS);
         assertThat(completed).isTrue();
         assertThat(responseBody.get()).isNotNull();
+    }
+    @Test
+    void handlerExceptionDoesNotCrashServer() throws Exception {
+        HttpResponse<String> cookedResponse = get("/explode");
+        assertThat(cookedResponse.statusCode()).isEqualTo(500);
+        assertThat(cookedResponse.body()).isEqualTo("Internal Server Error");
+
+        HttpResponse<String> responseAfterCookedResponse = get("/hello");
+        assertThat(responseAfterCookedResponse.statusCode()).isEqualTo(200);
+        assertThat(responseAfterCookedResponse.body()).isEqualTo("Hello World!");
     }
 }
