@@ -1,7 +1,6 @@
 package com.myhttpserver.app.router;
 
 
-import com.myhttpserver.app.io.ConnectionHandler;
 import com.myhttpserver.app.request.HttpMethod;
 import com.myhttpserver.app.request.HttpRequest;
 import com.myhttpserver.app.response.HttpResponse;

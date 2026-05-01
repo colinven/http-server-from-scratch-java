@@ -6,8 +6,6 @@ import com.myhttpserver.app.response.HttpResponse;
 import com.myhttpserver.app.router.Router;
 import com.myhttpserver.app.server.HttpServer;
 
-import java.io.IOException;
-
 public class App {
 
     private static final int PORT = 8080;

@@ -2,7 +2,7 @@ package com.myhttpserver.app.server;
 
 import com.myhttpserver.app.io.ConnectionHandler;
 
-import java.io.*;
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
