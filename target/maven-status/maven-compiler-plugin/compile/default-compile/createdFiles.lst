@@ -2,7 +2,10 @@ com/myhttpserver/app/parser/RequestParser$1.class
 com/myhttpserver/app/App.class
 com/myhttpserver/app/parser/RequestParser.class
 com/myhttpserver/app/server/HttpServer.class
+com/myhttpserver/app/router/RouteKey.class
+com/myhttpserver/app/config/AppConfig.class
 com/myhttpserver/app/response/HttpResponse.class
+com/myhttpserver/app/router/RouteHandler.class
 com/myhttpserver/app/request/HttpRequest.class
 com/myhttpserver/app/parser/ParserState.class
 com/myhttpserver/app/exception/HttpParseException.class

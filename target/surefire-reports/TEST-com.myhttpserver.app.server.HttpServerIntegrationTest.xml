@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.1" name="com.myhttpserver.app.parser.RequestParserTest" time="0.128" tests="7" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.1" name="com.myhttpserver.app.server.HttpServerIntegrationTest" time="7.119" tests="5" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="25"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
@@ -53,11 +53,34 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="69.0"/>
   </properties>
-  <testcase name="givenRequestWithNoHostHeader_whenParseRequest_thenThrowHttpParseExceptionWith400" classname="com.myhttpserver.app.parser.RequestParserTest" time="0.082"/>
-  <testcase name="givenHeaderValueWithExtraWhiteSpace_whenParseRequest_thenValueIsTrimmed" classname="com.myhttpserver.app.parser.RequestParserTest" time="0.004"/>
-  <testcase name="givenValidGetRequest_whenParseRequest_thenParsesRequestSuccessfully" classname="com.myhttpserver.app.parser.RequestParserTest" time="0.004"/>
-  <testcase name="givenRequestWithBareLF_whenParseRequest_thenThrowHttpParseExceptionWith400" classname="com.myhttpserver.app.parser.RequestParserTest" time="0.002"/>
-  <testcase name="givenRequestWithMalformedRequestLine_whenParseRequest_thenThrowHttpParseExceptionWith400" classname="com.myhttpserver.app.parser.RequestParserTest" time="0.001"/>
-  <testcase name="givenRequestWithMultipleHeaders_whenParseRequest_thenAllHeadersPresent" classname="com.myhttpserver.app.parser.RequestParserTest" time="0.002"/>
-  <testcase name="givenRequestWithIncorrectHttpVersion_whenParseRequest_thenThrowHttpParseExceptionWith505" classname="com.myhttpserver.app.parser.RequestParserTest" time="0.003"/>
+  <testcase name="slowHandlerDoesNotBlockFastHandlerInConcurrentRequests" classname="com.myhttpserver.app.server.HttpServerIntegrationTest" time="2.542">
+    <system-out><![CDATA[(http-server): Listening on port 9090
+]]></system-out>
+    <system-err><![CDATA[(http-server): Server stopped
+]]></system-err>
+  </testcase>
+  <testcase name="threadPoolDoesNotLeakUnderLoad" classname="com.myhttpserver.app.server.HttpServerIntegrationTest" time="3.819">
+    <system-out><![CDATA[(http-server): Listening on port 9090
+]]></system-out>
+    <system-err><![CDATA[(http-server): Server stopped
+]]></system-err>
+  </testcase>
+  <testcase name="gracefulShutdownDrainsInFlightResponse" classname="com.myhttpserver.app.server.HttpServerIntegrationTest" time="0.521">
+    <system-out><![CDATA[(http-server): Listening on port 9090
+]]></system-out>
+    <system-err><![CDATA[(http-server): Server stopped
+]]></system-err>
+  </testcase>
+  <testcase name="handlerExceptionDoesNotCrashServer" classname="com.myhttpserver.app.server.HttpServerIntegrationTest" time="0.117">
+    <system-out><![CDATA[(http-server): Listening on port 9090
+]]></system-out>
+    <system-err><![CDATA[(http-server): Server stopped
+]]></system-err>
+  </testcase>
+  <testcase name="concurrentClientsDoNotCorruptEachOthersResponses" classname="com.myhttpserver.app.server.HttpServerIntegrationTest" time="0.111">
+    <system-out><![CDATA[(http-server): Listening on port 9090
+]]></system-out>
+    <system-err><![CDATA[(http-server): Server stopped
+]]></system-err>
+  </testcase>
 </testsuite>

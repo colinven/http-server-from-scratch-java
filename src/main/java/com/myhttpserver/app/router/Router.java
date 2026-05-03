@@ -27,12 +27,11 @@ public class Router {
 
     public HttpResponse dispatch(HttpRequest request) throws Exception{
         HttpMethod method = request.requestLine().method();
-        String path = request.requestLine().target();
-        RouteHandler handler = routes.get(new RouteKey(method, path));
+        String target = request.requestLine().target();
+        String path = target.contains("?") ? target.substring(0, target.indexOf("?")) : target;
 
-        if (handler == null) {
-            return HttpResponse.notFound();
-        }
+        RouteHandler handler = routes.get(new RouteKey(method, path));
+        if (handler == null) return HttpResponse.notFound();
 
         return handler.handle(request);
     }

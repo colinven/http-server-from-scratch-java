@@ -1,2 +1,3 @@
 /home/colinvenancio/dev/repos/backend/my-http-server/src/test/java/com/myhttpserver/app/AppTest.java
 /home/colinvenancio/dev/repos/backend/my-http-server/src/test/java/com/myhttpserver/app/parser/RequestParserTest.java
+/home/colinvenancio/dev/repos/backend/my-http-server/src/test/java/com/myhttpserver/app/server/HttpServerIntegrationTest.java
