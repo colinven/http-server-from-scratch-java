@@ -93,8 +93,8 @@ public class HttpServerIntegrationTest {
         latch.await(5, TimeUnit.SECONDS);
 
         assertThat(error.get()).isNull();
-        assertThat(response1.get()).isEqualTo("Hello World!");
-        assertThat(response2.get()).isEqualTo("Hello World!");
+        assertThat(response1.get()).isEqualTo("Hello, World!");
+        assertThat(response2.get()).isEqualTo("Hello, World!");
     }
     @Test
     void slowHandlerDoesNotBlockFastHandlerInConcurrentRequests() throws Exception {
@@ -174,6 +174,6 @@ public class HttpServerIntegrationTest {
 
         HttpResponse<String> responseAfterCookedResponse = get("/hello");
         assertThat(responseAfterCookedResponse.statusCode()).isEqualTo(200);
-        assertThat(responseAfterCookedResponse.body()).isEqualTo("Hello World!");
+        assertThat(responseAfterCookedResponse.body()).isEqualTo("Hello, World!");
     }
 }
