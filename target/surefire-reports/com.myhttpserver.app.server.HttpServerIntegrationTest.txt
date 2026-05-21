@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.myhttpserver.app.server.HttpServerIntegrationTest
--------------------------------------------------------------------------------
-Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.119 s -- in com.myhttpserver.app.server.HttpServerIntegrationTest
