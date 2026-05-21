@@ -4,6 +4,7 @@ import com.myhttpserver.app.exception.HttpParseException;
 import com.myhttpserver.app.parser.RequestParser;
 import com.myhttpserver.app.request.HttpRequest;
 import com.myhttpserver.app.response.HttpResponse;
+import com.myhttpserver.app.router.RouteHandler;
 import com.myhttpserver.app.router.Router;
 
 import java.io.*;
@@ -25,7 +26,10 @@ public class HttpConnectionHandler implements ConnectionHandler {
                 ) {
             try {
                 HttpRequest request = parser.parseRequest(input);
-                HttpResponse response = router.dispatch(request);
+                RouteHandler handler = router.getHandler(request);
+                HttpResponse response = handler == null
+                        ? HttpResponse.notFound()
+                        : handler.handle(request);
                 response.write(output);
             } catch (HttpParseException e) {
                 HttpResponse.ofString(e.getStatusCode(), e.getMessage()).write(output);

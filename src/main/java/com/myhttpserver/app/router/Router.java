@@ -25,15 +25,12 @@ public class Router {
         routes.put(new RouteKey(HttpMethod.DELETE, path), handler);
     }
 
-    public HttpResponse dispatch(HttpRequest request) throws Exception{
+    public RouteHandler getHandler(HttpRequest request) {
         HttpMethod method = request.requestLine().method();
         String target = request.requestLine().target();
         String path = target.contains("?") ? target.substring(0, target.indexOf("?")) : target;
 
-        RouteHandler handler = routes.get(new RouteKey(method, path));
-        if (handler == null) return HttpResponse.notFound();
-
-        return handler.handle(request);
+        return routes.get(new RouteKey(method, path));
     }
 
 }
