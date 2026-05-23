@@ -32,70 +32,32 @@ public class HttpResponse {
         out.flush();
     }
 
-    public static HttpResponse ofString(int statusCode, String body) {
-        byte[] bodyBytes = body.getBytes(StandardCharsets.UTF_8);
+    private static HttpResponse text(int statusCode, String body) {
+        byte[] bytes = body.getBytes(StandardCharsets.UTF_8);
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "text/plain");
-        headers.put("Content-Length", String.valueOf(bodyBytes.length));
-        return new HttpResponse(statusCode, headers, bodyBytes);
+        headers.put("Content-Length", String.valueOf(bytes.length));
+        return new HttpResponse(statusCode, headers, bytes);
     }
 
     public static HttpResponse okText(String body) {
-        byte[] bodyBytes = body.getBytes(StandardCharsets.UTF_8);
-        Map<String, String> headers = new HashMap<>();
-        headers.put("Content-Type", "text/plain");
-        headers.put("Content-Length", String.valueOf(bodyBytes.length));
-        return new HttpResponse(200, headers, bodyBytes);
+        return text(200, body);
     }
-
-    public static HttpResponse badRequest(String message) {
-        byte[] body = message.getBytes(StandardCharsets.UTF_8);
-        Map<String, String> headers = new HashMap<>();
-        headers.put("Content-Type", "text/plain");
-        headers.put("Content-Length", String.valueOf(body.length));
-        return new HttpResponse(400, headers, body);
+    public static HttpResponse badRequest(String msg) {
+        return text(400, msg);
     }
-
     public static HttpResponse notFound() {
-        String body = "Resource not found";
-        byte[] bodyBytes = body.getBytes(StandardCharsets.UTF_8);
-        Map<String, String> headers = new HashMap<>();
-        headers.put("Content-Type", "text/plain");
-        headers.put("Content-Length", String.valueOf(bodyBytes.length));
-        return new HttpResponse(404, headers, bodyBytes);
+        return text(404, "Resource not found");
     }
-
     public static HttpResponse internalServerError() {
-        String body = "Internal Server Error";
-        byte[] bodyBytes = body.getBytes(StandardCharsets.UTF_8);
-        Map<String, String> headers = new HashMap<>();
-        headers.put("Content-Type", "text/plain");
-        headers.put("Content-Length", String.valueOf(bodyBytes.length));
-        return new HttpResponse(500, headers, bodyBytes);
+        return text(500, "Internal Server Error");
+    }
+    public static HttpResponse httpVersionNotSupported(String msg) {
+        return text(505, msg);
     }
 
-    public static HttpResponse httpVersionNotSupported(String message) {
-        byte[] body = message.getBytes(StandardCharsets.UTF_8);
-        Map<String, String> headers = new HashMap<>();
-        headers.put("Content-Type", "text/plain");
-        headers.put("Content-Length", String.valueOf(body.length));
-        return new HttpResponse(505, headers, body);
-    }
-
-    public int getStatusCode() {
-        return statusCode;
-    }
-
-    public String getReasonPhrase() {
-        return reasonPhrase;
-    }
-
-    public Map<String, String> getHeaders() {
-        return headers;
-    }
-
-    public byte[] getBody() {
-        return body;
+    public static HttpResponse ofString(int statusCode, String body) {
+        return text(statusCode, body);
     }
 
     private static String getReasonPhrase(int code) {
